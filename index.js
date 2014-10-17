@@ -1,5 +1,5 @@
 var CssSelectorParser = require('css-selector-parser').CssSelectorParser;
-var chalk = require('chalk');
+var cssparse = require('css');
 
 parser = new CssSelectorParser();
 parser.registerSelectorPseudos('has');
@@ -85,10 +85,10 @@ function cop() {
     }
   }
 
-  var plugin = function plugin(om, rework) {
-    var num = 0;
-    var report = walkEach(om.rules);
-    renderReport(report);
+  var plugin = function plugin(css) {
+    var om = cssparse.parse(css);
+    var report = walkEach(om.stylesheet.rules);
+    return report;
   };
 
   plugin.on = function (type, handler) {
@@ -100,26 +100,6 @@ function cop() {
   };
 
   return plugin;
-}
-
-function out(s) {
-  process.stdout.write(s);
-}
-
-function renderReport(r) {
-  out('\n');
-  r.warnings.forEach(function (warning) {
-    out(chalk.yellow('Warning: ' + warning.msg + '\n'));
-    out('Line ' + warning.position.line + ', Column ' + warning.position.column + '\n\n');
-  });
-  r.errors.forEach(function (error) {
-    out(chalk.red('Error: ' + error.msg + '\n'));
-    out('Line ' + error.position.line + ', Column ' + error.position.column + '\n\n');
-  });
-  out(chalk.bold(r.warnings.length + ' warnings, ' + r.errors.length + ' errors\n\n'));
-  if (r.errors.length) {
-    process.exit(1);
-  }
 }
 
 module.exports = cop;
