@@ -1,0 +1,21 @@
+{
+  "name": "stylecop",
+  "version": "1.0.0",
+  "description": "A rework plugin for linting CSS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "css",
+    "lint",
+    "rework",
+    "plugin"
+  ],
+  "author": "potch",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "css-selector-parser": "^1.0.3"
+  }
+}
