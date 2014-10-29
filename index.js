@@ -18,6 +18,46 @@ function cop() {
     });
   }
 
+  function walkSelector(report, node, ctx) {
+    function warn(msg) {
+      report.warnings.push({
+        msg: msg
+      });
+    }
+
+    function error(msg) {
+      report.errors.push({
+        msg: msg,
+        position: ctx.position.start
+      });
+    }
+
+    var snitch = {
+      warn: warn,
+      error: error,
+      position: ctx.position.start
+    };
+
+    if (node.type === 'ruleSet') {
+      if (handlers.selector) {
+        handlers.selector.forEach(function (handler) {
+          handler.call(snitch, node);
+        });
+      }
+    }
+    if (node.type === 'rule') {
+      if (handlers['selector.rule']) {
+        handlers['selector.rule'].forEach(function (handler) {
+          handler.call(snitch, node);
+        });
+      }
+    }
+    if (node.rule) {
+      walkSelector(report, node.rule, ctx);
+    }
+    return report;
+  }
+
   function walk(report, node) {
     if (!node.type) {
       return report;
@@ -41,6 +81,17 @@ function cop() {
       warn: warn,
       error: error
     };
+
+    if (node.selectors) {
+      node.selectors = node.selectors.map(function (selector) {
+        var s = parser.parse(selector);
+        s.raw = selector;
+        return s;
+      });
+      node.selectors.forEach(function (selector) {
+        walkSelector(report, selector, node);
+      });
+    }
 
     var type = node.type;
     if (type in handlers) {

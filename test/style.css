@@ -1,6 +1,12 @@
 
-foo {}
+foo bar {
+  color: red;
+}
 
-bar.baz {
+foo bar[baz][blip="4"] {
+
+}
+
+bar > baz.bar.kree {
   color: red;
 }

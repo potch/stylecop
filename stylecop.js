@@ -10,7 +10,6 @@ var linterpath = opts[0];
 var csspath = opts[1];
 
 
-
 try {
   var processor = require(path.join(process.cwd(), linterpath));
 } catch (e) {
