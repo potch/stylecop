@@ -9,8 +9,15 @@ var opts = require('nomnom').parse();
 var linterpath = opts[0];
 var csspath = opts[1];
 
+showUsage = function() {
+  console.log('Usage: node stylecop.js <path to linter> <path to css file>');
+};
 
 try {
+  if (!linterpath || !csspath) {
+    showUsage();
+    process.exit(1);
+  }
   var processor = require(path.join(process.cwd(), linterpath));
 } catch (e) {
   console.error(e);
